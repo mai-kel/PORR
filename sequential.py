@@ -1,4 +1,4 @@
-from random import random
+import random
 
 # i - wiersz
 # j - kolumna
@@ -141,11 +141,12 @@ def calculate_reverse_matrix(matrix: list[list[float]]) -> list[list[float]]:
             b=b_k_a_b_k
         )
 
-        if get_cauchy_diff(previous_matrix=b_i, new_matrix=b_next) < EPSILON:
-            break
-
+        diff = get_cauchy_diff(previous_matrix=b_i, new_matrix=b_next)
         b_i = b_next
         cur_iter += 1
+
+        if diff < EPSILON:
+            break
 
     return b_i
 
@@ -170,5 +171,5 @@ def print_matrix(matrix: list[list[float]]) -> None:
     for row in matrix:
         print(row)
 
-
-print_matrix(calculate_reverse_matrix(A))
+if __name__ == "__main__":
+    print_matrix(calculate_reverse_matrix(A))
