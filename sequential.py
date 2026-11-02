@@ -3,6 +3,8 @@ import random
 # i - wiersz
 # j - kolumna
 
+matrix_type = list[list[float]]
+
 EPSILON = 0.00001
 MAX_ITER = 100
 
@@ -13,20 +15,21 @@ A = [
 ]
 
 
-def multiply_matrices(a: list[list[float]],
-                      b: list[list[float]]) -> list[list[float]]:
+def multiply_matrices(a: matrix_type,
+                      b: matrix_type) -> matrix_type:
     output = [[0 for _ in range(len(b[0]))] for _ in range(len(a))]
 
     for i in range(len(a)):
-        for j in range(len(b[0])):
-            for k in range(len(a[0])):
-                output[i][j] += a[i][k] * b[k][j]
+        for k in range(len(a[0])):
+            r = a[i][k]
+            for j in range(len(b[0])):
+                output[i][j] += r * b[k][j]
 
     return output
 
 
-def add_matrices(a: list[list[float]],
-                 b: list[list[float]]) -> list[list[float]]:
+def add_matrices(a: matrix_type,
+                 b: matrix_type) -> matrix_type:
     output = [[0 for _ in range(len(a[0]))] for _ in range(len(a))]
 
     for i in range(len(a)):
@@ -36,8 +39,8 @@ def add_matrices(a: list[list[float]],
     return output
 
 
-def subtract_matrices(a: list[list[float]],
-                      b: list[list[float]]) -> list[list[float]]:
+def subtract_matrices(a: matrix_type,
+                      b: matrix_type) -> matrix_type:
     output = [[0 for _ in range(len(a[0]))] for _ in range(len(a))]
 
     for i in range(len(a)):
@@ -52,7 +55,7 @@ def get_identity_matrix(n: int) -> list[list[int]]:
     return output
 
 
-def get_matrix_trace(matrix: list[list[float]]) -> float:
+def get_matrix_trace(matrix: matrix_type) -> float:
     total = 0
     for i in range(len(matrix)):
         total += matrix[i][i]
@@ -60,7 +63,7 @@ def get_matrix_trace(matrix: list[list[float]]) -> float:
     return total
 
 
-def get_transposition(matrix: list[list[float]]) -> list[list[float]]:
+def get_transposition(matrix: matrix_type) -> matrix_type:
     new_matrix = [[0 for _ in range(len(matrix))] for _ in range(len(matrix[0]))]
     for i in range(len(matrix)):
         for j in range(len(matrix[0])):
@@ -69,8 +72,8 @@ def get_transposition(matrix: list[list[float]]) -> list[list[float]]:
     return new_matrix
 
 
-def divide_matrix_by_scalar(matrix: list[list[float]],
-                            num: int) -> list[list[float]]:
+def divide_matrix_by_scalar(matrix: matrix_type,
+                            num: int) -> matrix_type:
     new_matrix = [[0 for j in range(len(matrix))] for i in range(len(matrix[0]))]
     for i in range(len(matrix)):
         for j in range(len(matrix[0])):
@@ -79,8 +82,8 @@ def divide_matrix_by_scalar(matrix: list[list[float]],
     return new_matrix
 
 
-def multiply_matrix_by_scalar(matrix: list[list[float]],
-                              num: int) -> list[list[float]]:
+def multiply_matrix_by_scalar(matrix: matrix_type,
+                              num: int) -> matrix_type:
     new_matrix = [[0 for j in range(len(matrix))] for i in range(len(matrix[0]))]
     for i in range(len(matrix)):
         for j in range(len(matrix[0])):
@@ -89,7 +92,7 @@ def multiply_matrix_by_scalar(matrix: list[list[float]],
     return new_matrix
 
 
-def get_sum_of_quadrative_elements(matrix: list[list[float]]) -> float:
+def get_sum_of_quadrative_elements(matrix: matrix_type) -> float:
     total = 0
     for i in range(len(matrix)):
         for j in range(len(matrix[0])):
@@ -101,8 +104,8 @@ def get_sum_of_quadrative_elements(matrix: list[list[float]]) -> float:
 # ----------------------------------------------------------------
 
 
-def get_frobenius_norm_diff(original: list[list[float]],
-                            solution: list[list[float]]) -> float:
+def get_frobenius_norm_diff(original: matrix_type,
+                            solution: matrix_type) -> float:
     diff_matrix = multiply_matrices(a=solution, b=original)
     diff_matrix = subtract_matrices(diff_matrix,
                                     get_identity_matrix(len(diff_matrix)))
@@ -112,22 +115,22 @@ def get_frobenius_norm_diff(original: list[list[float]],
     return frobenius_norm
 
 
-def get_cauchy_diff(previous_matrix: list[list[float]],
-                    new_matrix: list[list[float]]) -> float:
+def get_cauchy_diff(previous_matrix: matrix_type,
+                    new_matrix: matrix_type) -> float:
     diff_matrix = subtract_matrices(new_matrix, previous_matrix)
     frobenius_norm = get_sum_of_quadrative_elements(diff_matrix)**0.5
 
     return frobenius_norm
 
 
-def get_first_element(matrix: list[list[float]]) -> list[list[float]]:
+def get_first_element(matrix: matrix_type) -> matrix_type:
     trace = get_sum_of_quadrative_elements(matrix)
 
     return divide_matrix_by_scalar(matrix=get_transposition(matrix=matrix),
                                    num=trace)
 
 
-def calculate_reverse_matrix(matrix: list[list[float]]) -> list[list[float]]:
+def calculate_reverse_matrix(matrix: matrix_type) -> matrix_type:
     cur_iter = 0
     b_i = get_first_element(matrix=matrix)
 
@@ -151,7 +154,7 @@ def calculate_reverse_matrix(matrix: list[list[float]]) -> list[list[float]]:
     return b_i
 
 
-def generate_invertible_matrix(n: int) -> list[list[float]]:
+def generate_invertible_matrix(n: int) -> matrix_type:
     matrix = [[random.uniform(-10.0, 10.0) for _ in range(n)] for _ in range(n)]
 
     for i in range(n):
@@ -167,7 +170,7 @@ def generate_invertible_matrix(n: int) -> list[list[float]]:
     return matrix
 
 
-def print_matrix(matrix: list[list[float]]) -> None:
+def print_matrix(matrix: matrix_type) -> None:
     for row in matrix:
         print(row)
 
