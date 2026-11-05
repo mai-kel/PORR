@@ -4,6 +4,7 @@ import time
 import sequential as seq
 import threads as thr
 
+
 def generate_matrix(n: int, seed: int = 42) -> list[list[float]]:
     random.seed(seed)
     return seq.generate_invertible_matrix(n)
@@ -22,17 +23,18 @@ def test_sequential(A: list[list[float]]):
     return elapsed
 
 
-def test_threads(A: list[list[float]]):
+def test_threads(A: list[list[float]], workers: int):
     n = len(A)
     print(f"\n--- THREADS (N={n}) ---")
 
     t_start = time.perf_counter()
-    b_inv = thr.calculate_reverse_matrix(A)
+    b_inv = thr.calculate_reverse_matrix(A, workers)
     elapsed = time.perf_counter() - t_start
 
-    err = thr.get_frobenius_norm_diff(A, b_inv)
+    err = thr.get_frobenius_norm_diff(A, b_inv, workers)
     print(f"Time: {elapsed:.4f} s | Error: {err:.2e}")
     return elapsed
+
 
 if __name__ == "__main__":
     N = 250
@@ -42,4 +44,4 @@ if __name__ == "__main__":
     A = generate_matrix(N, seed=SEED)
 
     test_sequential(A)
-    test_threads(A)
+    test_threads(A, 4)
