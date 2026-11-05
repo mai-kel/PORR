@@ -1,6 +1,7 @@
 import random
 import time
 
+import processes as prc
 import sequential as seq
 import threads as thr
 
@@ -36,6 +37,19 @@ def test_threads(A: list[list[float]], workers: int):
     return elapsed
 
 
+def test_processes(A: list[list[float]], workers: int) -> float:
+    n = len(A)
+    print(f"\n--- PROCESSES (N={n}) ---")
+
+    t_start = time.perf_counter()
+    b_inv = prc.calculate_reverse_matrix(A, workers)
+    elapsed = time.perf_counter() - t_start
+
+    err = prc.get_frobenius_norm_diff(A, b_inv, workers)
+    print(f"Time: {elapsed:.4f} s | Error: {err:.2e}")
+    return elapsed
+
+
 if __name__ == "__main__":
     N = 250
     SEED = 42
@@ -45,3 +59,4 @@ if __name__ == "__main__":
 
     test_sequential(A)
     test_threads(A, 4)
+    test_processes(A, 4)
