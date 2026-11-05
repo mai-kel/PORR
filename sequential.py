@@ -1,18 +1,6 @@
 import random
 
-# i - wiersz
-# j - kolumna
-
-matrix_type = list[list[float]]
-
-EPSILON = 0.00001
-MAX_ITER = 100
-
-A = [
-    [-1,  -2,   3],
-    [ 0,   2,  -1],
-    [-1,   3,   0]
-]
+from common import EPSILON, MAX_ITER, A, matrix_type
 
 
 def multiply_matrices(a: matrix_type,
@@ -107,24 +95,24 @@ def get_sum_of_quadrative_elements(matrix: matrix_type) -> float:
 def get_frobenius_norm_diff(original: matrix_type,
                             solution: matrix_type) -> float:
     diff_matrix = multiply_matrices(a=solution, b=original)
-    diff_matrix = subtract_matrices(diff_matrix,
-                                    get_identity_matrix(len(diff_matrix)))
+    diff_matrix = subtract_matrices(a=diff_matrix,
+                                    b=get_identity_matrix(len(diff_matrix)))
 
-    frobenius_norm = get_sum_of_quadrative_elements(diff_matrix)**0.5
+    frobenius_norm = get_sum_of_quadrative_elements(matrix=diff_matrix) ** 0.5
 
     return frobenius_norm
 
 
 def get_cauchy_diff(previous_matrix: matrix_type,
                     new_matrix: matrix_type) -> float:
-    diff_matrix = subtract_matrices(new_matrix, previous_matrix)
-    frobenius_norm = get_sum_of_quadrative_elements(diff_matrix)**0.5
+    diff_matrix = subtract_matrices(a=new_matrix, b=previous_matrix)
+    frobenius_norm = get_sum_of_quadrative_elements(matrix=diff_matrix) ** 0.5
 
     return frobenius_norm
 
 
 def get_first_element(matrix: matrix_type) -> matrix_type:
-    trace = get_sum_of_quadrative_elements(matrix)
+    trace = get_sum_of_quadrative_elements(matrix=matrix)
 
     return divide_matrix_by_scalar(matrix=get_transposition(matrix=matrix),
                                    num=trace)
@@ -173,6 +161,7 @@ def generate_invertible_matrix(n: int) -> matrix_type:
 def print_matrix(matrix: matrix_type) -> None:
     for row in matrix:
         print(row)
+
 
 if __name__ == "__main__":
     print_matrix(calculate_reverse_matrix(A))
